@@ -1,51 +1,10 @@
-from fastapi import FastAPI
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import APIRouter, JSONResponse
+from sqlmodel import Session, select
 
-# from starlette.applications import Starlette
-from starlette.middleware import Middleware
-from starlette.middleware.sessions import SessionMiddleware
-from starlette.responses import JSONResponse
-from starlette.routing import RedirectResponse, Route
-from starlette.staticfiles import StaticFiles
+from organ.db import engine
+from organ.models import Organization
 
-# from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
-from starlette_admin.contrib.sqlmodel import Admin, ModelView
-
-from organ._version import __version__
-from organ.auth import CustomAuthProvider
-from organ.config import ENVIRONMENT, ORGAN_SECRET
-from organ.db import engine, get_user
-from organ.models import Organization, User
-from organ.views import OrganizationView
-
-
-# from organ.config import STATIC_DIR, TEMPLATES_DIR
-
-templates = Jinja2Templates(directory="templates")
-
-
-def init_db():
-    SQLModel.metadata.create_all(engine)
-
-
-def create_admin_user():
-    if ENVIRONMENT == "development":
-        with Session(engine) as session:
-            if not get_user("mrman"):
-                session.add(
-                    User(username="mrman", full_name="Mr. Man", password="coolpass")
-                )
-
-                session.add(
-                    Organization(name="Cool Org", shortname="WCORG", state="CO")
-                )
-
-                return session.commit()
-
-
-def redirect_to_admin(request):
-    return RedirectResponse(url="/admin")
+org = APIRouter()
 
 
 def serialize_org(org):
@@ -61,18 +20,8 @@ def serialize_org(org):
     }
 
 
-main = FastAPI(
-    on_startup=[init_db, create_admin_user],
-    routes=[
-        Route("/", redirect_to_admin),
-        # Route("/org/{uid}", org_by_uid, methods=["GET"]),
-        # Route("/org", org_by_uid, methods=["POST"])
-    ],
-)
-
-
 # get an org by uid
-@main.get("/org/{uid}")
+@org.get("/{uid}")
 def org_by_uid(uid):
     with Session(engine) as session:
         org = session.exec(select(Organization).where(Organization.uid == uid)).first()
@@ -84,7 +33,7 @@ def org_by_uid(uid):
 
 
 # search for orgs based on any field
-@main.get("/orgs")
+@org.get("/")
 def get_orgs(
     uid: str = None,
     name: str = None,
@@ -126,7 +75,7 @@ def get_orgs(
             return JSONResponse({"error": "No matching results...", "org": None})
 
 
-@main.post("/org")
+@org.post("/")
 def create_org(
     name: str = None,
     shortname: str = None,
@@ -163,18 +112,3 @@ def create_org(
         return JSONResponse(
             {"error": f"Missing value for required field: { fieldname }", "org": None}
         )
-
-
-admin = Admin(
-    engine,
-    title='Organ',
-    templates_dir='templates',
-    statics_dir='static',
-    auth_provider=CustomAuthProvider(login_path="/sign-in", logout_path="/sign-out"),
-    middlewares=[Middleware(SessionMiddleware, secret_key=ORGAN_SECRET)],
-)
-
-# Add views
-admin.add_view(ModelView(User, icon="fa fa-users"))
-admin.add_view(OrganizationView(Organization, icon="fa fa-box"))
-admin.mount_to(main)

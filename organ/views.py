@@ -8,23 +8,28 @@
 # from starlette.templating import Jinja2Templates
 from starlette_admin import URLField
 from starlette_admin.contrib.sqlmodel import ModelView
-# from starlette_admin.exceptions import FormValidationError
 
+# from starlette_admin.exceptions import FormValidationError
 # # from app.sqla.fields import MarkdownField, CommentCounterField
 # # from app.sqla.models import Comment, Post, User
 from organ.fields import ShowImageField
 
+# from starlette_admin.exceptions import FormValidationError
+
+
 class OrganizationView(ModelView):
     # page_size_options = [5, 10, 25, -1]
     fields = [
-      "uid",
-      "name",
-      "shortname",
-      "state",
-      URLField("url"),
-      ShowImageField("logo_url", label="Logo", display_template="displays/showimage.html"),
-      "about",
-      "productions",
+        "uid",
+        "name",
+        "shortname",
+        "state",
+        URLField("url"),
+        ShowImageField(
+            "logo_url", label="Logo", display_template="displays/showimage.html"
+        ),
+        "about",
+        "productions",
     ]
 
     # detail_template = "organization_detail.html"
