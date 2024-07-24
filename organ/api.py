@@ -1,4 +1,5 @@
-from fastapi import APIRouter, JSONResponse
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 from sqlmodel import Session, select
 
 from organ.db import engine
