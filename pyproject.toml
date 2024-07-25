@@ -17,6 +17,7 @@ dependencies = [
     "starlette-admin>=0.14.1",
     "itsdangerous>=2.2.0",
     "fastcrud>=0.13.1",
+    "asyncpg>=0.29.0",
 ]
 requires-python = ">=3.9"
 license = { text = "MIT" }
