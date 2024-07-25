@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:5b352ad1170d6e93017b1ab85794cc45dd65747f7b0dd1823e14872f83923312"
+content_hash = "sha256:dcc628bccb5719170a385ab39051d84190fbeb79de0b75451a2e58fe7aa4d713"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -151,6 +151,23 @@ dependencies = [
 files = [
     {file = "fastapi_cli-0.0.4-py3-none-any.whl", hash = "sha256:a2552f3a7ae64058cdbb530be6fa6dbfc975dc165e4fa66d224c3d396e25e809"},
     {file = "fastapi_cli-0.0.4.tar.gz", hash = "sha256:e2e9ffaffc1f7767f488d6da34b6f5a377751c996f397902eb6abb99a67bde32"},
+]
+
+[[package]]
+name = "fastcrud"
+version = "0.13.1"
+requires_python = "<4.0,>=3.9"
+summary = "FastCRUD is a Python package for FastAPI, offering robust async CRUD operations and flexible endpoint creation utilities."
+groups = ["default"]
+dependencies = [
+    "SQLAlchemy-Utils<0.42.0,>=0.41.1",
+    "SQLAlchemy<3.0.0,>=2.0.0",
+    "fastapi<0.112.0,>=0.100.0",
+    "pydantic<3.0.0,>=2.0.0",
+]
+files = [
+    {file = "fastcrud-0.13.1-py3-none-any.whl", hash = "sha256:2c0d911f1dfa7367238a17a7f3dc1617173ad77c9965d4fbc1019aef465fd00d"},
+    {file = "fastcrud-0.13.1.tar.gz", hash = "sha256:b00706297d880b85bd8ab7b7102128a6b31eb7aa11860747b95fb664abe5507b"},
 ]
 
 [[package]]
@@ -679,6 +696,21 @@ files = [
     {file = "SQLAlchemy-2.0.31-cp39-cp39-win_amd64.whl", hash = "sha256:3cb8a66b167b033ec72c3812ffc8441d4e9f5f78f5e31e54dcd4c90a4ca5bebc"},
     {file = "SQLAlchemy-2.0.31-py3-none-any.whl", hash = "sha256:69f3e3c08867a8e4856e92d7afb618b95cdee18e0bc1647b77599722c9a28911"},
     {file = "SQLAlchemy-2.0.31.tar.gz", hash = "sha256:b607489dd4a54de56984a0c7656247504bd5523d9d0ba799aef59d4add009484"},
+]
+
+[[package]]
+name = "sqlalchemy-utils"
+version = "0.41.2"
+requires_python = ">=3.7"
+summary = "Various utility functions for SQLAlchemy."
+groups = ["default"]
+dependencies = [
+    "SQLAlchemy>=1.3",
+    "importlib-metadata; python_version < \"3.8\"",
+]
+files = [
+    {file = "SQLAlchemy-Utils-0.41.2.tar.gz", hash = "sha256:bc599c8c3b3319e53ce6c5c3c471120bd325d0071fb6f38a10e924e3d07b9990"},
+    {file = "SQLAlchemy_Utils-0.41.2-py3-none-any.whl", hash = "sha256:85cf3842da2bf060760f955f8467b87983fb2e30f1764fd0e24a48307dc8ec6e"},
 ]
 
 [[package]]

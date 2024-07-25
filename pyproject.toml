@@ -16,6 +16,7 @@ dependencies = [
     "psycopg2>=2.9.9",
     "starlette-admin>=0.14.1",
     "itsdangerous>=2.2.0",
+    "fastcrud>=0.13.1",
 ]
 requires-python = ">=3.9"
 license = { text = "MIT" }
