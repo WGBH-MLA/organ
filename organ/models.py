@@ -7,10 +7,10 @@ from starlette.requests import Request
 
 class OrganizationSchema(SQLModel):
     name: str = Field(
-        default=None, index=True, unique=True, schema_extra={"validation_alias": "Name"}
+        default=None, index=True, schema_extra={"validation_alias": "Name"}
     )
     shortname: str = Field(
-        default=None, index=True, schema_extra={"validation_alias": "Short Name"}
+        default=None, index=True, schema_extra={"validation_alias": "Short name"}
     )
     state: Optional[str] = Field(
         default=None, index=True, schema_extra={"validation_alias": "State"}
@@ -19,10 +19,10 @@ class OrganizationSchema(SQLModel):
         default=None, index=True, schema_extra={"validation_alias": "Url"}
     )
     logo_url: Optional[str] = Field(
-        default=None, index=True, schema_extra={"validation_alias": "Logo Url"}
+        default=None, index=True, schema_extra={"validation_alias": "Logo"}
     )
     about: Optional[str] = Field(
-        default=None, index=True, schema_extra={"validation_alias": "About"}
+        default=None, schema_extra={"validation_alias": "About"}
     )
     productions: Optional[str] = Field(
         default=None, index=True, schema_extra={"validation_alias": "Productions"}

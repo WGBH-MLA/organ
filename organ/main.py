@@ -29,7 +29,7 @@ def create_admin_user():
             )
             session.add(
                 Organization.model_validate(
-                    {"Name": "Org2", "Short Name": "WORG", "State": "OR"}
+                    {"Name": "Org2", "Short name": "WORG", "State": "OR"}
                 )
             )
         session.commit()
