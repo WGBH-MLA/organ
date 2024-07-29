@@ -27,11 +27,6 @@ def create_admin_user():
             session.add(
                 User(username="mrman", full_name="Mr. Man", password="coolpass")
             )
-            session.add(
-                Organization.model_validate(
-                    {"Name": "Org2", "Short name": "WORG", "State": "OR"}
-                )
-            )
         session.commit()
 
 

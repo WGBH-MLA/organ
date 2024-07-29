@@ -1,8 +1,16 @@
-from typing import Any, Dict, List, Optional
+from typing import Annotated
 from uuid import UUID, uuid4
 
-from sqlmodel import Field, Relationship, SQLModel
+from pydantic import AnyHttpUrl, BeforeValidator, TypeAdapter
+from sqlmodel import Field, SQLModel
 from starlette.requests import Request
+
+http_url_adapter = TypeAdapter(AnyHttpUrl)
+
+Url = Annotated[
+    str | None,
+    BeforeValidator(lambda value: str(http_url_adapter.validate_python(value))),
+]
 
 
 class OrganizationSchema(SQLModel):
@@ -12,33 +20,33 @@ class OrganizationSchema(SQLModel):
     shortname: str = Field(
         default=None, index=True, schema_extra={"validation_alias": "Short name"}
     )
-    state: Optional[str] = Field(
+    state: str | None = Field(
         default=None, index=True, schema_extra={"validation_alias": "State"}
     )
-    url: Optional[str] = Field(
-        default=None, index=True, schema_extra={"validation_alias": "Url"}
-    )
-    logo_url: Optional[str] = Field(
+    url: Url = Field(default=None, index=True, schema_extra={"validation_alias": "Url"})
+    logo_url: str | None = Field(
         default=None, index=True, schema_extra={"validation_alias": "Logo"}
     )
-    about: Optional[str] = Field(
-        default=None, schema_extra={"validation_alias": "About"}
-    )
-    productions: Optional[str] = Field(
+    about: str | None = Field(default=None, schema_extra={"validation_alias": "About"})
+    productions: str | None = Field(
         default=None, index=True, schema_extra={"validation_alias": "Productions"}
     )
-    location: Optional[str] = Field(default=None, index=True)
+    latitude: float | None = Field(default=None, index=True)
+
+    longitude: float | None = Field(default=None, index=True)
+
+    ovid: str | None = Field(default=None, index=True)
 
 
 class Organization(OrganizationSchema, table=True):
     __tablename__ = "organizations"
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     # create with new uuid
     uid: UUID = Field(index=True, default_factory=uuid4, unique=True)
 
 
 class User(SQLModel, table=True):
-    id: Optional[int] = Field(primary_key=True)
+    id: int | None = Field(primary_key=True)
     # display name
     full_name: str = Field(min_length=3, index=True)
     # login name
