@@ -5,6 +5,8 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette_admin.auth import AdminUser, AuthProvider
 from starlette_admin.exceptions import FormValidationError, LoginFailed
+
+
 from organ.db import engine, get_user
 from organ.models import User
 
@@ -76,3 +78,5 @@ class CustomAuthProvider(AuthProvider):
   async def logout(self, request: Request, response: Response) -> Response:
     request.session.clear()
     return response
+
+
