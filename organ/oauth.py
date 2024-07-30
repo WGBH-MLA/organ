@@ -6,7 +6,8 @@ from fastapi_oauth2.config import OAuth2Config
 from fastapi_oauth2.middleware import Auth, User
 from social_core.backends.github import GithubOAuth2
 
-# from models import User as UserModel
+from organ.db import get_async_session
+from organ.models import User
 
 github_client = OAuth2Client(
     backend=GithubOAuth2,
@@ -33,3 +34,7 @@ oauth_config = OAuth2Config(
 
 async def on_auth(auth: Auth, user: User):
     print('Auth success', auth, user)
+
+    with get_async_session() as session:
+        session.add(User(**user.model_dump()))
+        session.commit()

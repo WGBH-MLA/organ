@@ -50,9 +50,9 @@ class User(SQLModel, table=True):
     # display name
     full_name: str = Field(min_length=3, index=True)
     # login name
-    username: str = Field(index=True, unique=True)
+    # username: str = Field(index=True, unique=True)
 
-    password: str = Field(index=False)
+    # password: str = Field(index=False)
 
     async def __admin_repr__(self, request: Request):
         return self.full_name

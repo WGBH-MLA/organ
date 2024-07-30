@@ -1,82 +1,77 @@
 from typing import Optional
 
 from sqlmodel import Session, SQLModel, select
+from starlette.datastructures import URL
+from starlette.middleware import Middleware
 from starlette.requests import Request
-from starlette.responses import Response
-from starlette_admin.auth import AdminUser, AuthProvider
+from starlette.responses import RedirectResponse, Response
+from starlette.routing import Route
+from starlette_admin import BaseAdmin
+from starlette_admin.auth import AdminUser, AuthMiddleware, AuthProvider
 from starlette_admin.exceptions import FormValidationError, LoginFailed
 
-
-from organ.db import engine, get_user
-from organ.models import User
-
-# users = {
-#     "admin": {
-#         "name": "Admin",
-#         "avatar": "avatars/01.png",
-#         "roles": ["admin"],
-#     },
-#     "demo": {
-#         "name": "John Doe",
-#         "avatar": None,
-#         "roles": ["demo"],
-#     },
-# }
+from organ.config import AUTH0_CLIENT_ID, AUTH0_DOMAIN
 
 
-class CustomAuthProvider(AuthProvider):
-  """
-  This is for demo purpose, it's not a better
-  way to save and validate user credentials
-  """
+class OAuthProvider(AuthProvider):
+    async def is_authenticated(self, request: Request) -> bool:
+        if request.session.get('user', None) is not None:
+            request.state.user = request.session.get('user')
+            return True
+        return False
 
-  async def login(
-    self,
-    username: str,
-    password: str,
-    remember_me: bool,
-    request: Request,
-    response: Response,
-  ) -> Response:
-    if len(username) < 3:
-      """Form data validation"""
-      raise FormValidationError(
-        {"username": "Please ensure that your username has at least 3 characters"}
-      )
+    def get_admin_user(self, request: Request) -> Optional[AdminUser]:
+        user = request.state.user
+        return AdminUser(
+            username=user['name'],
+            photo_url=user['picture'],
+        )
 
-    # load user from db
-    user = get_user(username)
-    if user and password == user.password:
-      """Save `username` in session"""
-      request.session.update({"username": username})
-      return response
+    async def render_login(self, request: Request, admin: BaseAdmin):
+        """Override the default login behavior to implement custom logic."""
+        # auth0 = oauth.create_client('auth0')
+        # redirect_uri = request.url_for(
+        #     admin.route_name + ':authorize_auth0'
+        # ).include_query_params(next=request.query_params.get('next'))
+        # return await auth0.authorize_redirect(request, str(redirect_uri))
+        return RedirectResponse(
+            url=URL(f'https://{AUTH0_DOMAIN}/authorize').include_query_params(
+                client_id=AUTH0_CLIENT_ID,
+                response_type='code',
+                # redirect_uri=request.url_for(admin.route_name + ':authorize_auth0'),
+                redirect_uri='http://localhost:9000/oauth2/github/authorize',
+            )
+        )
 
-    raise LoginFailed("Invalid username or password.")
+    async def render_logout(self, request: Request, admin: BaseAdmin) -> Response:
+        """Override the default logout to implement custom logic"""
+        request.session.clear()
+        return RedirectResponse(
+            url=URL(f'https://{AUTH0_DOMAIN}/v2/logout').include_query_params(
+                returnTo=request.url_for(admin.route_name + ':index'),
+                client_id=AUTH0_CLIENT_ID,
+            )
+        )
 
-  async def is_authenticated(self, request) -> bool:
-    print(request.method == "GET")
-    if request.method == "GET" and str(request.url).startswith("/admin/api/organization"):
-      # allow unauthenticated read access
-      return True
+    async def handle_auth_callback(self, request: Request):
+        # auth0 = oauth.create_client('auth0')
+        # token = await auth0.authorize_access_token(request)
+        # request.session.update({'user': token['userinfo']})
+        return RedirectResponse(request.query_params.get('next'))
 
-    user = get_user(request.session.get("username", None))
-    if user:
-      """
-      Save current `user` object in the request state. Can be used later
-      to restrict access to connected user.
-      """
-      request.state.user = user.username
-      return True
+    def setup_admin(self, admin: BaseAdmin):
+        super().setup_admin(admin)
+        """add custom authentication callback route"""
+        admin.routes.append(
+            Route(
+                '/auth0/authorize',
+                self.handle_auth_callback,
+                methods=['GET'],
+                name='authorize_auth0',
+            )
+        )
 
-    return False
-
-  def get_admin_user(self, request: Request) -> Optional[AdminUser]:
-    username = request.state.user  # Retrieve current user
-    
-    return AdminUser(username=username)
-
-  async def logout(self, request: Request, response: Response) -> Response:
-    request.session.clear()
-    return response
-
-
+    # def get_middleware(self, admin: BaseAdmin) -> Middleware:
+    #     return Middleware(
+    #         AuthMiddleware, provider=self, allow_paths=['/auth0/authorize']
+    #     )

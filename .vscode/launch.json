@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "numWorkers",
+      "type": "promptString",
+      "default": "4",
+      "description": "Number of Gunicorn workers to run"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Organ",
+      "type": "python",
+      "request": "launch",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "program": "${workspaceFolder}/.venv/bin/uvicorn",
+      "args": ["--host", "0.0.0.0", "--port", "9000", "--reload", "organ:main"]
+    }
+  ]
+}

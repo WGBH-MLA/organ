@@ -10,7 +10,7 @@ from starlette_admin.contrib.sqlmodel import Admin, ModelView
 
 from organ._version import __version__
 from organ.api import org
-from organ.auth import CustomAuthProvider
+from organ.auth import OAuthProvider
 from organ.config import ENVIRONMENT, ORGAN_SECRET
 from organ.crud import orgs
 from organ.db import engine, get_user
@@ -24,23 +24,12 @@ def init_db():
     SQLModel.metadata.create_all(engine)
 
 
-def create_admin_user():
-    if ENVIRONMENT != "development":
-        return
-    with Session(engine) as session:
-        if not get_user("mrman"):
-            session.add(
-                User(username="mrman", full_name="Mr. Man", password="coolpass")
-            )
-        session.commit()
-
-
 def redirect_to_admin(request):
     return RedirectResponse(url="/admin")
 
 
 main = FastAPI(
-    on_startup=[init_db, create_admin_user],
+    on_startup=[init_db],
     routes=[
         Route("/", redirect_to_admin),
     ],
@@ -49,8 +38,8 @@ logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
 logfire.instrument_fastapi(main)
 
 
-main.include_router(oauth2_router, tags=["auth"])
-main.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
+# main.include_router(oauth2_router, tags=["auth"])
+# main.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
 main.include_router(org, prefix="/org", tags=["org"])
 main.include_router(orgs)
 
@@ -59,7 +48,8 @@ admin = Admin(
     title='Organ',
     templates_dir='templates',
     statics_dir='static',
-    auth_provider=CustomAuthProvider(login_path="/sign-in", logout_path="/sign-out"),
+    auth_provider=OAuthProvider(),
+    # auth_provider=CustomAuthProvider(login_path="/sign-in", logout_path="/sign-out"),
     middlewares=[Middleware(SessionMiddleware, secret_key=ORGAN_SECRET)],
 )
 
