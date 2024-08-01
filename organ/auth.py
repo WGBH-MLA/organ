@@ -7,7 +7,12 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 from starlette.routing import Route
 from starlette_admin import BaseAdmin
-from starlette_admin.auth import AdminUser, AuthMiddleware, AuthProvider
+from starlette_admin.auth import (
+    AdminUser,
+    AuthMiddleware,
+    AuthProvider,
+    login_not_required,
+)
 from starlette_admin.exceptions import FormValidationError, LoginFailed
 
 from organ.config import AUTH0_CLIENT_ID, AUTH0_DOMAIN
@@ -15,48 +20,40 @@ from organ.config import AUTH0_CLIENT_ID, AUTH0_DOMAIN
 
 class OAuthProvider(AuthProvider):
     async def is_authenticated(self, request: Request) -> bool:
-        if request.session.get('user', None) is not None:
-            request.state.user = request.session.get('user')
+        if request.get('user'):
             return True
         return False
 
     def get_admin_user(self, request: Request) -> Optional[AdminUser]:
-        user = request.state.user
+        user = request.user
         return AdminUser(
             username=user['name'],
-            photo_url=user['picture'],
+            photo_url=user['avatar_url'],
         )
 
     async def render_login(self, request: Request, admin: BaseAdmin):
         """Override the default login behavior to implement custom logic."""
-        # auth0 = oauth.create_client('auth0')
-        # redirect_uri = request.url_for(
-        #     admin.route_name + ':authorize_auth0'
-        # ).include_query_params(next=request.query_params.get('next'))
-        # return await auth0.authorize_redirect(request, str(redirect_uri))
         return RedirectResponse(
             url=URL(f'https://{AUTH0_DOMAIN}/authorize').include_query_params(
                 client_id=AUTH0_CLIENT_ID,
                 response_type='code',
-                # redirect_uri=request.url_for(admin.route_name + ':authorize_auth0'),
                 redirect_uri='http://localhost:9000/oauth2/github/authorize',
             )
         )
 
     async def render_logout(self, request: Request, admin: BaseAdmin) -> Response:
         """Override the default logout to implement custom logic"""
-        request.session.clear()
-        return RedirectResponse(
+        response = RedirectResponse(
             url=URL(f'https://{AUTH0_DOMAIN}/v2/logout').include_query_params(
                 returnTo=request.url_for(admin.route_name + ':index'),
                 client_id=AUTH0_CLIENT_ID,
             )
         )
+        response.delete_cookie('Authorization')
+        return response
 
+    @login_not_required
     async def handle_auth_callback(self, request: Request):
-        # auth0 = oauth.create_client('auth0')
-        # token = await auth0.authorize_access_token(request)
-        # request.session.update({'user': token['userinfo']})
         return RedirectResponse(request.query_params.get('next'))
 
     def setup_admin(self, admin: BaseAdmin):
@@ -70,8 +67,3 @@ class OAuthProvider(AuthProvider):
                 name='authorize_auth0',
             )
         )
-
-    # def get_middleware(self, admin: BaseAdmin) -> Middleware:
-    #     return Middleware(
-    #         AuthMiddleware, provider=self, allow_paths=['/auth0/authorize']
-    #     )
