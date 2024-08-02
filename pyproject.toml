@@ -22,3 +22,6 @@ dependencies = [
 ]
 requires-python = ">=3.9"
 license = { text = "MIT" }
+
+[project.optional-dependencies]
+production = ["gunicorn>=22.0.0", "uvicorn>=0.30.5"]
