@@ -28,20 +28,20 @@ def redirect_to_admin(request):
     return RedirectResponse(url="/admin")
 
 
-main = FastAPI(
+app = FastAPI(
     on_startup=[init_db],
     routes=[
         Route("/", redirect_to_admin),
     ],
 )
 logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
-logfire.instrument_fastapi(main)
+logfire.instrument_fastapi(app)
 
 
-main.include_router(oauth2_router, tags=["auth"])
-main.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
-main.include_router(org, prefix="/org", tags=["org"])
-main.include_router(orgs)
+app.include_router(oauth2_router, tags=["auth"])
+app.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
+app.include_router(org, prefix="/org", tags=["org"])
+app.include_router(orgs)
 
 admin = Admin(
     engine,
@@ -52,9 +52,12 @@ admin = Admin(
         logout_path="/oauth2/logout",
     ),
     middlewares=[Middleware(SessionMiddleware, secret_key=ORGAN_SECRET)],
+    logo_url='static/GBH_Archives.png',
 )
 
 # Add views
 admin.add_view(ModelView(User, icon="fa fa-users"))
 admin.add_view(OrganizationView(Organization, icon="fa fa-box"))
-admin.mount_to(main)
+
+
+admin.mount_to(app)
