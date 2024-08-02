@@ -31,15 +31,15 @@ class OAuthProvider(AuthProvider):
             photo_url=user['avatar_url'],
         )
 
-    async def render_login(self, request: Request, admin: BaseAdmin):
-        """Override the default login behavior to implement custom logic."""
-        return RedirectResponse(
-            url=URL(f'https://{AUTH0_DOMAIN}/authorize').include_query_params(
-                client_id=AUTH0_CLIENT_ID,
-                response_type='code',
-                redirect_uri='http://localhost:9000/oauth2/github/authorize',
-            )
-        )
+    # async def render_login(self, request: Request, admin: BaseAdmin):
+    #     """Override the default login behavior to implement custom logic."""
+    #     return RedirectResponse(
+    #         url=URL(f'https://{AUTH0_DOMAIN}/authorize').include_query_params(
+    #             client_id=AUTH0_CLIENT_ID,
+    #             response_type='code',
+    #             redirect_uri='http://localhost:9000/oauth2/github/authorize',
+    #         )
+    #     )
 
     async def render_logout(self, request: Request, admin: BaseAdmin) -> Response:
         """Override the default logout to implement custom logic"""
