@@ -61,12 +61,12 @@ class User(SQLModel, table=True):
     async def __admin_repr__(self, request: Request):
         return self.display_name
 
-    async def __admin_select2_repr__(self, request: Request) -> str:
+    # async def __admin_select2_repr__(self, request: Request) -> str:
 
-        template_str = (
-            '<div class="d-flex align-items-center">{{obj.display_name}} <div>'
-        )
-        # return Template(template_str, autoescape=True).render(obj=self, url=url)
+    #     template_str = (
+    #         '<div class="d-flex align-items-center">{{obj.display_name}} <div>'
+    #     )
+    # return Template(template_str, autoescape=True).render(obj=self, url=url)
 
 
 # class UserSession(SQLModel, table=True):

@@ -1,5 +1,6 @@
 from os import getenv
 
+from fastapi import HTTPException, Request
 from fastapi_oauth2.claims import Claims
 from fastapi_oauth2.client import OAuth2Client
 from fastapi_oauth2.config import OAuth2Config
@@ -34,7 +35,7 @@ oauth_config = OAuth2Config(
 )
 
 
-async def on_auth(auth: Auth, user: OAuthUser):
+async def on_auth(auth: Auth, user: OAuthUser) -> None:
     print('Auth success', auth, user)
 
     with Session(engine) as session:
@@ -47,3 +48,10 @@ async def on_auth(auth: Auth, user: OAuthUser):
             u = u.model_copy(update=dict(user))
         session.add(u)
         session.commit()
+
+
+def is_user_authenticated(request: Request) -> OAuthUser:
+    user = request.get('user')
+    if not user:
+        raise HTTPException(401, detail="User not authenticated")
+    return OAuthUser(**user)

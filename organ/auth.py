@@ -1,19 +1,11 @@
 from typing import Optional
 
-from sqlmodel import Session, SQLModel, select
 from starlette.datastructures import URL
-from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 from starlette.routing import Route
 from starlette_admin import BaseAdmin
-from starlette_admin.auth import (
-    AdminUser,
-    AuthMiddleware,
-    AuthProvider,
-    login_not_required,
-)
-from starlette_admin.exceptions import FormValidationError, LoginFailed
+from starlette_admin.auth import AdminUser, AuthProvider, login_not_required
 
 from organ.config import AUTH0_CLIENT_ID, AUTH0_DOMAIN
 
@@ -30,16 +22,6 @@ class OAuthProvider(AuthProvider):
             username=user['name'],
             photo_url=user['avatar_url'],
         )
-
-    # async def render_login(self, request: Request, admin: BaseAdmin):
-    #     """Override the default login behavior to implement custom logic."""
-    #     return RedirectResponse(
-    #         url=URL(f'https://{AUTH0_DOMAIN}/authorize').include_query_params(
-    #             client_id=AUTH0_CLIENT_ID,
-    #             response_type='code',
-    #             redirect_uri='http://localhost:9000/oauth2/github/authorize',
-    #         )
-    #     )
 
     async def render_logout(self, request: Request, admin: BaseAdmin) -> Response:
         """Override the default logout to implement custom logic"""
