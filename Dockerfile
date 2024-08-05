@@ -1,24 +1,67 @@
 ###########################
 # 'base' build stage, common to all build stages
 ###########################
-FROM python as base
+FROM python:3.11-slim as base
+
+# Set working dir to /app, where all code lives.
 WORKDIR /app
-RUN pip install -U pip
+RUN pip install -U pip pdm
+
 # Copy app code to container
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml pdm.lock README.md ./
+COPY organ organ
 
-# add app directories
-ADD organ/ organ/
-ADD static/ static/
-ADD templates/ templates/
+# Copy migration files
+# COPY alembic.ini ./
+# COPY migrations migrations
 
-# Install PDM dependency manager
-RUN pip install pdm
+
+###########################
+# 'dev' build stage
+###########################
+FROM base as dev
+# Configure pdm to instal dependencies into ./__pypyackages__/
 RUN pdm config python.use_venv false
+# Configure python to use pep582 with local __pypyackages__
 ENV PYTHONPATH=/usr/local/lib/python3.11/site-packages/pdm/pep582
-ENV PATH=$PATH:/app/__pypackages__/3.11/bin/
+# Add local packages to $PATH
+ENV PATH=/app/__pypackages__/3.11/bin/:$PATH
 
-RUN pdm install -v
+# Install dev dependencies with pdm
+RUN pdm install -G dev
+# Start dev server.
+CMD uvicorn organ.app:app --host 0.0.0.0 --reload --log-level debug
 
-# CMD gunicorn chowda:app -b 0.0.0.0:8000 -w 2 --worker-class uvicorn.workers.UvicornWorker
-CMD uvicorn organ:main --host 0.0.0.0 --port 8000
+
+###########################
+# 'build' build stage for production
+############################
+FROM base as build
+RUN apt update && apt install -y gcc libpq-dev git
+
+RUN pdm config venv.with_pip True
+RUN pdm install -G production
+
+# Install pip into the virtual environment
+RUN /app/.venv/bin/python -m ensurepip
+
+###########################
+# 'production' final production image
+############################
+FROM python:3.11-slim as production
+WORKDIR /app
+
+RUN apt update && apt install -y libpq-dev
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/ /app/
+COPY templates templates
+COPY static static
+
+ENV organ_ENV=production
+ENV PATH="/app/.venv/bin:$PATH"
+
+EXPOSE 8000
+
+CMD gunicorn organ.main:main -b 0.0.0.0:8000 -w 2 --worker-class uvicorn.workers.UvicornWorker
