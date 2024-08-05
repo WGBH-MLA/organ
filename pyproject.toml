@@ -8,22 +8,20 @@ build-backend = 'pdm.backend'
 name = "organ"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "foglabs", email = "henry_neels@wgbh.org"},
-]
+authors = [{ name = "foglabs", email = "henry_neels@wgbh.org" }]
 dependencies = [
-    "fastapi>=0.95.1",
-    "uvicorn>=0.22.0",
-    "sqlmodel>=0.0.8",
-    "psycopg2>=2.9.6",
-    "starlette-admin>=0.8.2",
-    "itsdangerous>=2.1.2",
+    "fastapi>=0.111.1",
+    "uvicorn>=0.30.3",
+    "sqlmodel>=0.0.21",
+    "psycopg2>=2.9.9",
+    "starlette-admin>=0.14.1",
+    "itsdangerous>=2.2.0",
+    "fastcrud>=0.13.1",
+    "asyncpg>=0.29.0",
+    "pydantic>=2.8.2",
 ]
 requires-python = ">=3.9"
-license = {text = "MIT"}
+license = { text = "MIT" }
 
 [project.optional-dependencies]
-production = [
-    "gunicorn>=22.0.0",
-    "uvicorn>=0.30.5",
-]
+production = ["gunicorn>=22.0.0", "uvicorn>=0.30.5"]

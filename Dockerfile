@@ -64,4 +64,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
-CMD gunicorn organ.app:app -b 0.0.0.0:8000 -w 2 --worker-class uvicorn.workers.UvicornWorker
+CMD gunicorn organ.main:main -b 0.0.0.0:8000 -w 2 --worker-class uvicorn.workers.UvicornWorker
