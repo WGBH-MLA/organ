@@ -25,6 +25,7 @@ class OAuthProvider(AuthProvider):
 
     async def render_logout(self, request: Request, admin: BaseAdmin) -> Response:
         """Override the default logout to implement custom logic"""
+        request.session.clear()
         response = RedirectResponse(
             url=URL(f'https://{AUTH0_DOMAIN}/v2/logout').include_query_params(
                 returnTo=request.url_for(admin.route_name + ':index'),
