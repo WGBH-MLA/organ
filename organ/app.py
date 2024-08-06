@@ -1,4 +1,3 @@
-
 import logfire
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -16,7 +15,7 @@ from organ.crud import orgs
 from organ.db import engine
 from organ.models import Organization, User
 from organ.oauth import is_user_authenticated, oauth_config, on_auth
-from organ.views import OrganizationView
+from organ.views import OrganizationView, UserView
 
 
 def init_db():
@@ -57,7 +56,7 @@ admin = Admin(
 )
 
 # Add views
-admin.add_view(ModelView(User, icon="fa fa-users"))
+admin.add_view(UserView(User, icon="fa fa-users"))
 admin.add_view(OrganizationView(Organization, icon="fa fa-box"))
 
 admin.mount_to(app)
