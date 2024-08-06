@@ -43,11 +43,8 @@ async def on_auth(auth: Auth, user: OAuthUser) -> None:
         if u is None:
             print('New user: ', user.identity)
             u = User(**dict(user))
-        else:
-            print('Update user: ', user.identity)
-            u = u.model_copy(update=dict(user))
-        session.add(u)
-        session.commit()
+            session.add(u)
+            session.commit()
 
 
 def is_user_authenticated(request: Request) -> OAuthUser:

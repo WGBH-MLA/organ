@@ -6,7 +6,7 @@ from fastapi_oauth2.router import router as oauth2_router
 from sqlmodel import SQLModel
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.routing import RedirectResponse, Route
-from starlette_admin.contrib.sqlmodel import Admin, ModelView
+from starlette_admin.contrib.sqlmodel import Admin
 
 from organ._version import __version__
 from organ.auth import OAuthProvider
@@ -38,7 +38,7 @@ logfire.instrument_fastapi(app)
 
 
 app.include_router(oauth2_router, tags=["auth"])
-app.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
+app.add_middleware(OAuth2Middleware, config=oauth_config)  # , callback=on_auth)
 app.add_middleware(SessionMiddleware, secret_key=ORGAN_SECRET)
 app.include_router(orgs, dependencies=[Depends(is_user_authenticated)])
 

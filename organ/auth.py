@@ -33,19 +33,3 @@ class OAuthProvider(AuthProvider):
         )
         response.delete_cookie('Authorization')
         return response
-
-    @login_not_required
-    async def handle_auth_callback(self, request: Request):
-        return RedirectResponse(request.query_params.get('next'))
-
-    def setup_admin(self, admin: BaseAdmin):
-        super().setup_admin(admin)
-        """add custom authentication callback route"""
-        admin.routes.append(
-            Route(
-                '/auth0/authorize',
-                self.handle_auth_callback,
-                methods=['GET'],
-                name='authorize_auth0',
-            )
-        )
