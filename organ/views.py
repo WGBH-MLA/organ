@@ -1,20 +1,7 @@
-# from typing import Any, Dict
-
-# from jinja2 import Template
-# from sqlalchemy import desc, func, select
-# from sqlalchemy.orm import Session
-# from starlette.requests import Request
-# from starlette.responses import Response
-# from starlette.templating import Jinja2Templates
 from starlette_admin import URLField
 from starlette_admin.contrib.sqlmodel import ModelView
 
-# from starlette_admin.exceptions import FormValidationError
-# # from app.sqla.fields import MarkdownField, CommentCounterField
-# # from app.sqla.models import Comment, Post, User
 from organ.fields import ShowImageField, ShowOrgLogoField
-
-# from starlette_admin.exceptions import FormValidationError
 
 
 class OrganizationView(ModelView):

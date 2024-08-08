@@ -3,10 +3,8 @@ from typing import AsyncGenerator
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import Session, select
 
 from organ.config import DB_URL, ENVIRONMENT
-from organ.models import User
 
 
 def get_engine(env=ENVIRONMENT):

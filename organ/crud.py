@@ -11,5 +11,3 @@ orgs = crud_router(
     create_schema=OrganizationSchema,
     update_schema=OrganizationSchema,
 )
-
-# users = crud_router(User)

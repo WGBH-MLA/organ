@@ -3,11 +3,8 @@ from typing import Optional
 from starlette.datastructures import URL
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
-from starlette.routing import Route
 from starlette_admin import BaseAdmin
-from starlette_admin.auth import AdminUser, AuthProvider, login_not_required
-
-from organ.config import AUTH0_CLIENT_ID, AUTH0_DOMAIN
+from starlette_admin.auth import AdminUser, AuthProvider
 
 
 class OAuthProvider(AuthProvider):
