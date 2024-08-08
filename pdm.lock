@@ -5,7 +5,7 @@
 groups = ["default", "dev", "production"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:52180f0917ecd27624a07656f76bfa717e68669d2dbd73d79f47ae36c16dd1bf"
+content_hash = "sha256:f63f4429ae445b7c4cb7d7cd025b3002d35dbf409114019afe2326908ee9bd68"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -485,6 +485,9 @@ files = [
 name = "fastapi-oauth2"
 version = "1.0.0"
 requires_python = ">=3.7"
+git = "https://github.com/pysnippet/fastapi-oauth2.git"
+ref = "master"
+revision = "c7ca1ce40adec7d2554073c0639795e207a5deab"
 summary = "Easy to integrate OAuth2 authentication with support for several identity providers."
 groups = ["default"]
 dependencies = [
@@ -494,10 +497,6 @@ dependencies = [
     "python-jose>=3.3.0",
     "social-auth-core>=4.4.2",
     "starlette>=0.19.1",
-]
-files = [
-    {file = "fastapi-oauth2-1.0.0.tar.gz", hash = "sha256:d7bea74843fd096ddaaf93978cf61940efc6e7df719888d1168f2bb56da58910"},
-    {file = "fastapi_oauth2-1.0.0-py3-none-any.whl", hash = "sha256:e18fb5819f47a07b25e9b0bee253bb412247c12a4a067dc8d655fbd2ba563567"},
 ]
 
 [[package]]

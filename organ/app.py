@@ -38,7 +38,7 @@ logfire.instrument_fastapi(app)
 
 
 app.include_router(oauth2_router, tags=["auth"])
-app.add_middleware(OAuth2Middleware, config=oauth_config)  # , callback=on_auth)
+app.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
 app.add_middleware(SessionMiddleware, secret_key=ORGAN_SECRET)
 app.include_router(orgs, dependencies=[Depends(is_user_authenticated)])
 
