@@ -1,0 +1,43 @@
+{% extends "layout.html" %} {% block header %}{% endblock %} {% block sidebar %}
+{% endblock %} {% block content %}
+<div class="container-tight">
+  {% if login_logo_url or logo_url %}
+  <div class="text-center mb-4">
+    <a href="." class="navbar-brand navbar-brand-autodark">
+      <img src="{{ login_logo_url or logo_url }}" height="36" alt="" />
+    </a>
+  </div>
+  {% endif %}
+  <form class="card card-md" action="{{ request.url }}" method="POST">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4">
+          {{ app_title }}
+        </h1>
+        <h2 class="card-title text-center mb-4">
+        {{ _("Login to your account") }}
+      </h2>
+      {% if error %}
+      <div
+        class="alert alert-important alert-danger alert-dismissible"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div>
+            <i class="ti ti-alert-circle"></i>
+          </div>
+          <div>{{ error }}</div>
+        </div>
+        <a
+          class="btn-close btn-close-white"
+          data-bs-dismiss="alert"
+          aria-label="close"
+        ></a>
+      </div>
+      {% endif %}
+      <div class="mb-3">{% include "signin_google.html" %}</div>
+      <div class="mb-3">{% include "signin_github.html" %}</div>
+      <div>
+    </div>
+  </form>
+</div>
+{% endblock %}

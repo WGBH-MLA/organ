@@ -1,4 +1,4 @@
 from ._version import __version__
-from .main import main
+from .app import app
 
-__all__ = ['main', '__version__']
+__all__ = ['app', '__version__']

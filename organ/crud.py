@@ -1,7 +1,7 @@
-from fastcrud import FastCRUD, crud_router
+from fastcrud import crud_router
 
 from organ.db import get_async_session
-from organ.models import Organization, OrganizationSchema, User
+from organ.models import Organization, OrganizationSchema
 
 orgs = crud_router(
     model=Organization,
@@ -11,5 +11,3 @@ orgs = crud_router(
     create_schema=OrganizationSchema,
     update_schema=OrganizationSchema,
 )
-
-# users = crud_router(User)
