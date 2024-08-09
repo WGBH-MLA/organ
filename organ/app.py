@@ -11,11 +11,11 @@ from starlette_admin.contrib.sqlmodel import Admin
 from organ._version import __version__
 from organ.auth import OAuthProvider
 from organ.config import ORGAN_SECRET
-from organ.crud import orgs
+from organ.crud import orgs, ov_catalog
 from organ.db import engine
-from organ.models import Organization, User
+from organ.models import OpenVaultCatalog, Organization, User
 from organ.oauth import is_user_authenticated, oauth_config, on_auth
-from organ.views import OrganizationView, UserView
+from organ.views import OpenVaultCatalogView, OrganizationView, UserView
 
 
 def init_db():
@@ -41,6 +41,7 @@ app.include_router(oauth2_router, tags=["auth"])
 app.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
 app.add_middleware(SessionMiddleware, secret_key=ORGAN_SECRET)
 app.include_router(orgs, dependencies=[Depends(is_user_authenticated)])
+app.include_router(ov_catalog, dependencies=[Depends(is_user_authenticated)])
 
 # Add static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -58,5 +59,6 @@ admin = Admin(
 # Add views
 admin.add_view(UserView(User, icon="fa fa-users"))
 admin.add_view(OrganizationView(Organization, icon="fa fa-box"))
+admin.add_view(OpenVaultCatalogView(OpenVaultCatalog, icon="fa fa-vault"))
 
 admin.mount_to(app)
