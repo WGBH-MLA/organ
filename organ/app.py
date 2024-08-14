@@ -9,9 +9,9 @@ from starlette.routing import RedirectResponse, Route
 from starlette_admin.contrib.sqlmodel import Admin
 
 from organ._version import __version__
+from organ.api import orgs, ov_catalog
 from organ.auth import OAuthProvider
 from organ.config import ORGAN_SECRET
-from organ.crud import orgs, ov_catalog
 from organ.db import engine
 from organ.models import OpenVaultCatalog, Organization, User
 from organ.oauth import is_user_authenticated, oauth_config, on_auth
@@ -41,7 +41,7 @@ app.include_router(oauth2_router, tags=["auth"])
 app.add_middleware(OAuth2Middleware, config=oauth_config, callback=on_auth)
 app.add_middleware(SessionMiddleware, secret_key=ORGAN_SECRET)
 app.include_router(orgs, dependencies=[Depends(is_user_authenticated)])
-app.include_router(ov_catalog, dependencies=[Depends(is_user_authenticated)])
+app.include_router(ov_catalog)
 
 # Add static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
