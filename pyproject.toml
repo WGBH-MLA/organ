@@ -28,7 +28,7 @@ license = { text = "MIT" }
 
 [project.optional-dependencies]
 production = [
-    "gunicorn~=22.0",
+    "gunicorn~=23.0",
     "uvicorn~=0.30",
 ]
 
