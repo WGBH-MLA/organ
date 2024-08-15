@@ -14,6 +14,8 @@ Url = Annotated[
 
 
 class OrganizationSchema(SQLModel):
+    id: str | None = Field(default=None, index=True)
+
     name: str = Field(
         default=None, index=True, schema_extra={"validation_alias": "Name"}
     )
@@ -35,12 +37,10 @@ class OrganizationSchema(SQLModel):
 
     longitude: float | None = Field(default=None, index=True)
 
-    ovid: str | None = Field(default=None, index=True)
-
 
 class Organization(OrganizationSchema, table=True):
     __tablename__ = "organizations"
-    id: int | None = Field(default=None, primary_key=True)
+    id: str | None = Field(default=None, index=True, primary_key=True)
     uid: UUID = Field(index=True, default_factory=uuid4, unique=True)
 
 
@@ -53,3 +53,9 @@ class User(SQLModel, table=True):
 
     async def __admin_repr__(self, request: Request):
         return self.display_name
+
+
+class OpenVaultCatalog(SQLModel, table=True):
+    __tablename__ = "ov_guids"
+    ovid: str = Field(primary_key=True, index=True)
+    guid: str = Field(index=True)

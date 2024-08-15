@@ -5,7 +5,6 @@ from organ.fields import ShowImageField, ShowOrgLogoField
 
 
 class OrganizationView(ModelView):
-    # page_size_options = [5, 10, 25, -1]
     fields = [
         'id',
         'name',
@@ -19,7 +18,6 @@ class OrganizationView(ModelView):
         'longitude',
         'about',
         'productions',
-        'ovid',
         'uid',
     ]
 
@@ -36,3 +34,7 @@ class UserView(ModelView):
             'avatar_url', label='Avatar', display_template="displays/show_image.html"
         ),
     ]
+
+
+class OpenVaultCatalogView(ModelView):
+    label = 'Open Vault Catalog'
