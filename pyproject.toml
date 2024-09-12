@@ -19,8 +19,8 @@ dependencies = [
     "itsdangerous~=2.2",
     "fastcrud~=0.14",
     "asyncpg~=0.29",
-    "pydantic~=2.8",
-    "logfire[fastapi]~=0.50",
+    "pydantic~=2.9",
+    "logfire[fastapi]~=0.52",
     "fastapi-oauth2 @ git+https://github.com/pysnippet/fastapi-oauth2.git@master",
 ]
 requires-python = ">=3.9"
@@ -36,7 +36,7 @@ production = [
 dev = [
     "uvicorn~=0.30",
     "black~=24.8",
-    "ruff~=0.5",
+    "ruff~=0.6",
 ]
 
 [tool.ruff.format]
