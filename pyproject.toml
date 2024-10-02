@@ -11,16 +11,16 @@ authors = [
     { name = "foglabs", email = "henry_neels@wgbh.org" },
 ]
 dependencies = [
-    "fastapi~=0.111",
-    "uvicorn~=0.30",
+    "fastapi~=0.115",
+    "uvicorn~=0.31",
     "sqlmodel~=0.0",
     "psycopg2~=2.9",
     "starlette-admin~=0.14",
     "itsdangerous~=2.2",
-    "fastcrud~=0.14",
+    "fastcrud~=0.15",
     "asyncpg~=0.29",
     "pydantic~=2.9",
-    "logfire[fastapi]~=0.52",
+    "logfire[fastapi]~=1.0",
     "fastapi-oauth2 @ git+https://github.com/pysnippet/fastapi-oauth2.git@master",
 ]
 requires-python = ">=3.9"
@@ -29,12 +29,12 @@ license = { text = "MIT" }
 [project.optional-dependencies]
 production = [
     "gunicorn~=23.0",
-    "uvicorn~=0.30",
+    "uvicorn~=0.31",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "uvicorn~=0.30",
+    "uvicorn~=0.31",
     "black~=24.8",
     "ruff~=0.6",
 ]
