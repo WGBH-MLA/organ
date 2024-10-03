@@ -24,7 +24,6 @@ ov_catalog = crud_router(
     create_deps=[Depends(is_user_authenticated)],
     read_deps=None,
     read_multi_deps=[Depends(is_user_authenticated)],
-    read_paginated_deps=[Depends(is_user_authenticated)],
     update_deps=[Depends(is_user_authenticated)],
     delete_deps=[Depends(is_user_authenticated)],
     db_delete_deps=[Depends(is_user_authenticated)],
