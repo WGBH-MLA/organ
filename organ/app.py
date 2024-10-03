@@ -33,7 +33,7 @@ app = FastAPI(
         Route("/", redirect_to_admin),
     ],
 )
-logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
+logfire.configure()
 logfire.instrument_fastapi(app)
 
 

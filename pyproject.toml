@@ -26,6 +26,9 @@ dependencies = [
 requires-python = ">=3.9"
 license = { text = "MIT" }
 
+[tool.pdm.scripts]
+server = "uvicorn organ:app --reload"
+
 [project.optional-dependencies]
 production = ["gunicorn~=23.0", "uvicorn~=0.31"]
 

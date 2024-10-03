@@ -11,11 +11,12 @@ from sqlmodel import Session
 
 from organ.db import engine
 from organ.models import User
+from organ import config
 
 github_client = OAuth2Client(
     backend=GithubOAuth2,
-    client_id=getenv('OAUTH2_GITHUB_CLIENT_ID'),
-    client_secret=getenv('OAUTH2_GITHUB_CLIENT_SECRET'),
+    client_id=config.OAUTH2_GITHUB_CLIENT_ID,
+    client_secret=config.OAUTH2_GITHUB_CLIENT_SECRET,
     scope=['user:email'],
     claims=Claims(
         picture='avatar_url',
@@ -26,9 +27,9 @@ github_client = OAuth2Client(
 
 oauth_config = OAuth2Config(
     allow_http=True,
-    jwt_secret=getenv('JWT_SECRET'),
-    jwt_expires=getenv('JWT_EXPIRES'),
-    jwt_algorithm=getenv('JWT_ALGORITHM'),
+    jwt_secret=config.JWT_SECRET,
+    jwt_expires=config.JWT_EXPIRES,
+    jwt_algorithm=config.JWT_ALGORITHM,
     clients=[
         github_client,
     ],
