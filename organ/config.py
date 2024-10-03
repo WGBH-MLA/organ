@@ -1,8 +1,12 @@
 from os import environ
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
 
-load_dotenv()
+    load_dotenv()
+except ImportError:
+    pass
+
 
 ENVIRONMENT = environ.get('ENVIRONMENT', 'development')
 DB_URL = environ.get('DB_URL', 'postgresql://postgres:postgres@localhost:5432/organ')
