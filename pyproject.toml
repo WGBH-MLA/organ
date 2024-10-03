@@ -12,7 +12,6 @@ authors = [
 ]
 dependencies = [
     "fastapi~=0.115",
-    "uvicorn~=0.31",
     "sqlmodel~=0.0",
     "psycopg2~=2.9",
     "starlette-admin~=0.14",
@@ -30,10 +29,10 @@ license = { text = "MIT" }
 server = "uvicorn organ:app --reload"
 
 [project.optional-dependencies]
-production = ["gunicorn~=23.0", "uvicorn~=0.31"]
+production = ["gunicorn~=23.0", "uvicorn<0.31"]
 
 [tool.pdm.dev-dependencies]
-dev = ["uvicorn~=0.31", "black~=24.8", "ruff~=0.6"]
+dev = ["uvicorn<0.31", "black~=24.8", "ruff~=0.6"]
 
 [tool.ruff.format]
 quote-style = 'single'
