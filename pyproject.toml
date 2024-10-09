@@ -25,14 +25,11 @@ dependencies = [
 requires-python = ">=3.9"
 license = { text = "MIT" }
 
-[tool.pdm.scripts]
-server = "uvicorn organ:app --reload"
-
 [project.optional-dependencies]
-production = ["gunicorn~=23.0", "uvicorn<0.31"]
-
-[tool.pdm.dev-dependencies]
-dev = ["uvicorn<0.31", "black~=24.8", "ruff~=0.6"]
+production = [
+    "gunicorn~=23.0",
+    "uvicorn~=0.31",
+]
 
 [tool.ruff.format]
 quote-style = 'single'
@@ -61,3 +58,14 @@ select = [
     'W',   # pycodestyle warnings
 
 ]
+
+[tool.pdm.scripts]
+server = "uvicorn organ:app --reload"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "uvicorn~=0.31",
+    "black~=24.10",
+    "ruff~=0.6",
+]
+
