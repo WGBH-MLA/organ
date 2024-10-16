@@ -19,20 +19,17 @@ dependencies = [
     "fastcrud~=0.15",
     "asyncpg~=0.29",
     "pydantic~=2.9",
-    "logfire[fastapi]~=1.0",
+    "logfire[fastapi]~=1.1",
     "fastapi-oauth2 @ git+https://github.com/pysnippet/fastapi-oauth2.git@master",
 ]
 requires-python = ">=3.9"
 license = { text = "MIT" }
 
-[tool.pdm.scripts]
-server = "uvicorn organ:app --reload"
-
 [project.optional-dependencies]
-production = ["gunicorn~=23.0", "uvicorn<0.31"]
-
-[tool.pdm.dev-dependencies]
-dev = ["uvicorn<0.31", "black~=24.8", "ruff~=0.6"]
+production = [
+    "gunicorn~=23.0",
+    "uvicorn~=0.32",
+]
 
 [tool.ruff.format]
 quote-style = 'single'
@@ -61,3 +58,14 @@ select = [
     'W',   # pycodestyle warnings
 
 ]
+
+[tool.pdm.scripts]
+server = "uvicorn organ:app --reload"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "uvicorn~=0.32",
+    "black~=24.10",
+    "ruff~=0.6",
+]
+
