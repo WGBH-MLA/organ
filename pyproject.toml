@@ -26,10 +26,7 @@ requires-python = ">=3.9"
 license = { text = "MIT" }
 
 [project.optional-dependencies]
-production = [
-    "gunicorn~=23.0",
-    "uvicorn~=0.34",
-]
+production = ["gunicorn~=23.0", "uvicorn~=0.34"]
 
 [tool.ruff.format]
 quote-style = 'single'
@@ -64,8 +61,4 @@ server = "uvicorn organ:app --reload"
 
 
 [dependency-groups]
-dev = [
-    "uvicorn~=0.34",
-    "black~=25.1",
-    "ruff~=0.11",
-]
+dev = ["uvicorn~=0.34", "black~=25.1", "ruff~=0.11"]
