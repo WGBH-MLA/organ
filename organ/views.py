@@ -38,3 +38,4 @@ class UserView(ModelView):
 
 class OpenVaultCatalogView(ModelView):
     label = 'Open Vault Catalog'
+    list_template = 'ov-catalog.html'

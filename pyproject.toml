@@ -19,8 +19,8 @@ dependencies = [
     "fastcrud~=0.15",
     "asyncpg~=0.30",
     "pydantic~=2.11",
-    "logfire[fastapi]~=3.17",
     "fastapi-oauth2 @ git+https://github.com/pysnippet/fastapi-oauth2.git@master",
+    "loguru>=0.7.3",
 ]
 requires-python = ">=3.9"
 license = { text = "MIT" }

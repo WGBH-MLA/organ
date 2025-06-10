@@ -1,4 +1,4 @@
-import logfire
+from loguru import logger as log
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi_oauth2.middleware import OAuth2Middleware
@@ -19,7 +19,7 @@ from organ.views import OpenVaultCatalogView, OrganizationView, UserView
 
 
 def init_db():
-    logfire.info(f'Organ version: {__version__}')
+    log.info(f'Organ version: {__version__}')
     SQLModel.metadata.create_all(engine)
 
 
@@ -33,8 +33,6 @@ app = FastAPI(
         Route("/", redirect_to_admin),
     ],
 )
-logfire.configure()
-logfire.instrument_fastapi(app)
 
 
 app.include_router(oauth2_router, tags=["auth"])
