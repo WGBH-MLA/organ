@@ -57,8 +57,18 @@ select = [
 ]
 
 [tool.pdm.scripts]
-server = "uvicorn organ:app --reload"
+# Run the development server
+dev = "uvicorn organ:app --reload"
 
+# Dependency management
+## Lockfiles
+lock-dev = { shell = 'pdm lock -G dev' }
+lock-prod = { shell = 'pdm lock -G production -L pdm-locks/pdm.prod.lock' }
+locks = { composite = ['lock-dev', 'lock-prod'] }
+
+## Upgrades
+upgrade = { shell = 'pdm update  -G dev -u --no-sync --no-self' }
+upgrade-prod = { shell = 'pdm update --no-default -G production -L pdm-locks/pdm.prod.lock -u --no-sync --no-self' }
 
 [dependency-groups]
 dev = ["uvicorn~=0.34", "black~=25.1", "ruff~=0.11"]

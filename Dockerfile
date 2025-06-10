@@ -40,7 +40,7 @@ FROM base as build
 RUN apt update && apt install -y gcc libpq-dev git
 
 RUN pdm config venv.with_pip True
-RUN pdm install -G production
+RUN pdm install -G production -L pdm-locks/pdm.prod.lock
 
 # Install pip into the virtual environment
 RUN /app/.venv/bin/python -m ensurepip
