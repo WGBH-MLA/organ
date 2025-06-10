@@ -14,7 +14,6 @@
     {% include "modals/loading.html" %}
     {% include "modals/error.html" %}
     {% include "modals/actions.html" %}
-    {% include "modals/upload_csv.html" %}
 {% endblock %}
 {% block content %}
     <div class="container-fluid">
@@ -26,26 +25,27 @@
                         <div class="card-actions">
                             <script type="text/javascript">
                                 function uploadCSV() {
-                                    $('#modal-upload-csv').modal('show');
-                                    $('#modal-upload-csv').find('#actionConfirmation').html(`
+                                    $('#modal-action').modal('show');
+                                    $('#modal-action').find('#actionConfirmation').html(`
                                         Please make sure the CSV file is formatted correctly before uploading:
                                         <ul>
                                             <li>Column 1: OVID</li>
                                             <li>Column 2: GUID</li>
                                         </ul>`
                                     );
-                                    $('#modal-upload-csv').find('#modal-form').html(
-                                        `<form id="upload-csv-form" action="/api/{{ model.identity }}/bulk/" method="POST" enctype="multipart/form-data">
+                                    $('#modal-action').find('#modal-form').html(
+                                        `<form id="modal-form" action="/admin/api/{{ model.identity }}/actions?name=upload_csv" name="upload_csv" method="POST" enctype="multipart/form-data">
                                             <input type="file" name="csv_file" accept=".csv" required>
+                                            <input type="submit" class="btn btn-primary mt-2" value="Upload">
                                         </form>`
                                     );
                                 }
                             </script>
                             <div class="btn-list">
                                 <input type="button"
-                                       id="upload-csv"
+                                       id="upload_csv"
                                        class="btn btn-secondary"
-                                       value="{{ _('Upload CSV') }}"
+                                       value="Upload CSV"
                                        onclick="uploadCSV()" />
 
                                 {% include "actions.html" %}
