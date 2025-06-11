@@ -53,7 +53,7 @@ class OpenVaultCatalogView(ModelView):
         form = await request.form()
         csv_file = form.get('csv_file')
         if not csv_file:
-            return {"error": "No file uploaded"}, 400
+            raise ActionFailed("No file uploaded")
         # Process the CSV file
         import csv
         from io import StringIO
