@@ -8,6 +8,7 @@ from fastapi_oauth2.middleware import Auth
 from fastapi_oauth2.middleware import User as OAuthUser
 from social_core.backends.github import GithubOAuth2
 from sqlmodel import Session
+from loguru import logger as log
 
 from organ.db import engine
 from organ.models import User
@@ -37,14 +38,14 @@ oauth_config = OAuth2Config(
 
 
 async def on_auth(auth: Auth, user: OAuthUser) -> None:
-    print('Auth success', auth, user)
+    log.debug('Auth success', auth, user)
 
     # TODO: This function currently runs on every authenticated request, which is not ideal.
     # We should only run this after a new token is issued.
     with Session(engine) as session:
         u: User | None = session.get(User, user.identity)
         if u is None:
-            print('New user: ', user.identity)
+            log.success('New user: ', user.identity)
             u = User(**dict(user))
             session.add(u)
             session.commit()

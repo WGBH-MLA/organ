@@ -18,7 +18,8 @@
       "request": "launch",
       "python": "${workspaceFolder}/.venv/bin/python",
       "program": "${workspaceFolder}/.venv/bin/uvicorn",
-      "args": ["--host", "0.0.0.0", "--port", "9000", "--reload", "organ:app"]
+      "args": ["--host", "0.0.0.0", "--port", "8000", "--reload", "organ:app"],
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
