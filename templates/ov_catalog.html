@@ -34,7 +34,7 @@
                                         </ul>`
                                     );
                                     $('#modal-action').find('#modal-form').html(
-                                        `<form id="modal-form" action="/admin/api/{{ model.identity }}/actions?name=upload_csv" name="upload_csv" method="POST" enctype="multipart/form-data">
+                                        `<form id="modal-form" action="/admin/api/{{ model.identity }}/action?name=upload_csv" name="upload_csv" method="POST" enctype="multipart/form-data">
                                             <input type="file" name="csv_file" accept=".csv" required>
                                             <input type="submit" class="btn btn-primary mt-2" value="Upload">
                                         </form>`

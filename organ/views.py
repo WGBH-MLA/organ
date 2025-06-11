@@ -39,21 +39,21 @@ class UserView(ModelView):
 class OpenVaultCatalogView(ModelView):
     label = 'Open Vault Catalog'
     list_template = 'ov_catalog.html'
-    actions = ['upload_csv']
 
     @action(
         name='upload_csv',
         text='Upload CSV',
-        confirmation='''
-            Please make sure the CSV file is formatted correctly before uploading:
-                                                    <ul>
-                                                        <li>Column 1: OVID</li>
-                                                        <li>Column 2: GUID</li>
-                                                    </ul>
-        ''',
-        form='''<form id="modal-form" name="upload_csv" method="POST" enctype="multipart/form-data">
-                                            <input type="file" name="csv_file" accept=".csv" required>
-                                        </form>''',
+        custom_response=True,
+        # confirmation='''
+        #     Please make sure the CSV file is formatted correctly before uploading:
+        #                                             <ul>
+        #                                                 <li>Column 1: OVID</li>
+        #                                                 <li>Column 2: GUID</li>
+        #                                             </ul>
+        # ''',
+        # form='''<form id="modal-form" name="upload_csv" method="POST" enctype="multipart/form-data">
+        #                                     <input type="file" name="csv_file" accept=".csv" required>
+        #                                 </form>''',
     )
     async def upload_csv(self, request, pks):
         form = await request.form()
@@ -76,6 +76,14 @@ class OpenVaultCatalogView(ModelView):
                     f"Invalid row {n}: {row}. Each row must contain at least 2 columns."
                 )
                 continue
+            if not row[0] or not row[1]:
+                errors.append(f"Invalid row {n}: {row}. OVID and GUID cannot be empty.")
+                continue
+            if not row[1].startswith('cpb-aacip-'):
+                errors.append(
+                    f"Invalid row {n}: {row}. GUID must start with 'cpb-aacip-'."
+                )
+                continue
             ovid, guid = row[0], row[1]
             records.append({'ovid': ovid, 'guid': guid})
 
@@ -83,5 +91,35 @@ class OpenVaultCatalogView(ModelView):
             log.error('Errors found while importing CSV file:', errors)
             return f"{len(errors)} errors importing csv file"
 
-        log.success(f'{len(records)} records uploaded successfully!')
-        return f"{len(records)} records uploaded successfully!"
+        if not records:
+            log.error('No valid records found in the CSV file.')
+            return "No valid records found in the CSV file."
+
+        records_dict = {record['ovid']: record['guid'] for record in records}
+
+        from organ.models import OpenVaultCatalog
+        from sqlmodel import select, Session
+        from organ.db import engine
+
+        with Session(engine) as db:
+            existing_records = db.exec(
+                select(OpenVaultCatalog).where(
+                    OpenVaultCatalog.ovid.in_([record['ovid'] for record in records])
+                )
+            ).all()
+            if existing_records:
+                log.warning(
+                    f"{len(existing_records)} records already exist in the database: {[r.ovid for r in  existing_records]}"
+                )
+                for existing_record in existing_records:
+                    existing_record.guid = records_dict[existing_record.ovid]
+                    db.add(existing_record)
+                    del records_dict[existing_record.ovid]
+
+            for ovid, guid in records_dict.items():
+                new_record = OpenVaultCatalog(ovid=ovid, guid=guid)
+                db.add(new_record)
+            db.commit()
+
+        log.success(f'{len(records)} records updated successfully!')
+        return f"{len(records)} records updated successfully!"
