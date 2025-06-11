@@ -1,5 +1,6 @@
 from starlette_admin import URLField, action
 from starlette_admin.contrib.sqlmodel import ModelView
+from starlette_admin.exceptions import ActionFailed
 from loguru import logger as log
 from organ.fields import ShowImageField, ShowOrgLogoField
 
@@ -40,20 +41,13 @@ class OpenVaultCatalogView(ModelView):
     label = 'Open Vault Catalog'
     list_template = 'ov_catalog.html'
 
+    # This is to prevent the upload_csv action from being shown in the actions dropdown
+    actions = ['delete']
+
     @action(
         name='upload_csv',
         text='Upload CSV',
         custom_response=True,
-        # confirmation='''
-        #     Please make sure the CSV file is formatted correctly before uploading:
-        #                                             <ul>
-        #                                                 <li>Column 1: OVID</li>
-        #                                                 <li>Column 2: GUID</li>
-        #                                             </ul>
-        # ''',
-        # form='''<form id="modal-form" name="upload_csv" method="POST" enctype="multipart/form-data">
-        #                                     <input type="file" name="csv_file" accept=".csv" required>
-        #                                 </form>''',
     )
     async def upload_csv(self, request, pks):
         form = await request.form()
@@ -71,9 +65,9 @@ class OpenVaultCatalogView(ModelView):
         records = []
         errors = []
         for n, row in enumerate(csv_reader):
-            if len(row) < 2:
+            if len(row) != 2:
                 errors.append(
-                    f"Invalid row {n}: {row}. Each row must contain at least 2 columns."
+                    f"Invalid row {n}: {row}. Each row must contain exactly 2 columns."
                 )
                 continue
             if not row[0] or not row[1]:
@@ -89,11 +83,11 @@ class OpenVaultCatalogView(ModelView):
 
         if errors:
             log.error('Errors found while importing CSV file:', errors)
-            return f"{len(errors)} errors importing csv file"
+            raise ActionFailed(f"{len(errors)} errors importing csv file: {errors}")
 
         if not records:
             log.error('No valid records found in the CSV file.')
-            return "No valid records found in the CSV file."
+            raise ActionFailed("No valid records found in the CSV file.")
 
         records_dict = {record['ovid']: record['guid'] for record in records}
 

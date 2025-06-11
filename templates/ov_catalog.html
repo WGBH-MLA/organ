@@ -23,30 +23,13 @@
                     <div class="card-header">
                         <div id="btn_container" class="card-title"></div>
                         <div class="card-actions">
-                            <script type="text/javascript">
-                                function uploadCSV() {
-                                    $('#modal-action').modal('show');
-                                    $('#modal-action').find('#actionConfirmation').html(`
-                                        Please make sure the CSV file is formatted correctly before uploading:
-                                        <ul>
-                                            <li>Column 1: OVID</li>
-                                            <li>Column 2: GUID</li>
-                                        </ul>`
-                                    );
-                                    $('#modal-action').find('#modal-form').html(
-                                        `<form id="modal-form" action="/admin/api/{{ model.identity }}/action?name=upload_csv" name="upload_csv" method="POST" enctype="multipart/form-data">
-                                            <input type="file" name="csv_file" accept=".csv" required>
-                                            <input type="submit" class="btn btn-primary mt-2" value="Upload">
-                                        </form>`
-                                    );
-                                }
-                            </script>
                             <div class="btn-list">
-                                <input type="button"
-                                       id="upload_csv"
-                                       class="btn btn-secondary"
-                                       value="Upload CSV"
-                                       onclick="uploadCSV()" />
+                                <a title="Upload CSV"  class="btn btn-secondary btn-block ms-2" href="#" data-bs-toggle="modal" data-bs-target="#modal-action" data-name="upload_csv" data-confirmation="Please make sure the CSV file is formatted correctly with no headers: OVID,GUID" data-form="<form id=&quot;modal-form&quot; name=&quot;upload_csv&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;>
+                                    <input type=&quot;file&quot; name=&quot;csv_file&quot; accept=&quot;.csv&quot; required>
+                                    </form>">
+                                    <i class="fa-solid fa-upload me-2"></i>
+                                    Upload CSV
+                                </a>
 
                                 {% include "actions.html" %}
 
