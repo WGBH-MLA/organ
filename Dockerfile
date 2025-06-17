@@ -1,14 +1,14 @@
 ###########################
 # 'base' build stage, common to all build stages
 ###########################
-FROM python:3.11-slim as base
+FROM python:3.13-slim as base
 
 # Set working dir to /app, where all code lives.
 WORKDIR /app
-RUN pip install -U pip pdm
+RUN pip install -U pip
 
 # Copy app code to container
-COPY pyproject.toml pdm.lock README.md ./
+COPY pyproject.toml README.md ./
 COPY organ organ
 
 # Copy migration files
@@ -20,47 +20,41 @@ COPY organ organ
 # 'dev' build stage
 ###########################
 FROM base as dev
-# Configure pdm to instal dependencies into ./__pypyackages__/
-RUN pdm config python.use_venv false
-# Configure python to use pep582 with local __pypyackages__
-ENV PYTHONPATH=/usr/local/lib/python3.11/site-packages/pdm/pep582
-# Add local packages to $PATH
-ENV PATH=/app/__pypackages__/3.11/bin/:$PATH
 
-# Install dev dependencies with pdm
-RUN pdm install -G dev
+# Install uv
+RUN pip install uv
+
+# Install dev dependencies
+RUN uv sync --dev
 # Start dev server.
 CMD uvicorn organ.app:app --host 0.0.0.0 --reload --log-level debug
 
 
 ###########################
-# 'build' build stage for production
-############################
-FROM base as build
-RUN apt update && apt install -y gcc libpq-dev git
-
-RUN pdm config venv.with_pip True
-RUN pdm install -G production -L pdm-locks/pdm.prod.lock
-
-# Install pip into the virtual environment
-RUN /app/.venv/bin/python -m ensurepip
-
-###########################
 # 'production' final production image
 ############################
-FROM python:3.11-slim as production
+FROM python:3.13-slim as production
 WORKDIR /app
 
-RUN apt update && apt install -y libpq-dev
-RUN apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
-COPY --from=build /app/ /app/
+# Copy the application code
+COPY pyproject.toml README.md ./
+COPY organ organ
 COPY templates templates
 COPY static static
 
-ENV organ_ENV=production
-ENV PATH="/app/.venv/bin:$PATH"
+# Install pip
+RUN pip install -U pip
+
+# Install the project in production mode
+RUN pip install .[production]
+
+# Clean up APT
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the production environment
+ENV ENVIRONMENT=production
 
 EXPOSE 8000
 
