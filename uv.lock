@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '3.10'",
@@ -453,7 +453,7 @@ wheels = [
 
 [[package]]
 name = "fastcrud"
-version = "0.15.12"
+version = "0.17.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.10'",
@@ -465,9 +465,9 @@ dependencies = [
     { name = "sqlalchemy", marker = "python_full_version >= '3.9.2'" },
     { name = "sqlalchemy-utils", marker = "python_full_version >= '3.9.2'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3e/53/f75ee9b3661761dd9dcd27bcf5cd95ba8b0f1df67b43c4953e34deab5a26/fastcrud-0.15.12.tar.gz", hash = "sha256:8fe76abd176e8f506e4cf6193f350a291e1932a3a1c3606c2f8bc26b992c4ca4", size = 41216, upload-time = "2025-06-09T00:47:13.79Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/80/8e/73565c0b61100a0d497331ee07519dcd86d0ddf9e8853c35ea0ea865b56c/fastcrud-0.17.1.tar.gz", hash = "sha256:2f0360750452fd12d615f416a3f81c12a031defaa69f68fbecb10071184edd1b", size = 44618, upload-time = "2025-10-08T03:35:57.611Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bb/5c/3be53d780d58b99e94cc5c0f4e2a9b8573aac2713e62c9aade02176b9aec/fastcrud-0.15.12-py3-none-any.whl", hash = "sha256:8a828a2f838f437cd7fec8bde639b45b4e63d5482bd725c5e2214a9c9d2493df", size = 55747, upload-time = "2025-06-09T00:47:12.465Z" },
+    { url = "https://files.pythonhosted.org/packages/73/d1/8647245de058f6d023ac0ce500ce7226d1f8d7059f471a0f6acecbd5f2d4/fastcrud-0.17.1-py3-none-any.whl", hash = "sha256:48b7da39c0395cba3827f6c9aacf2d38548c598438971d6fada84081274e216b", size = 59027, upload-time = "2025-10-08T03:35:55.899Z" },
 ]
 
 [[package]]
@@ -719,7 +719,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "fastapi-oauth2" },
     { name = "fastcrud", version = "0.15.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9.2'" },
-    { name = "fastcrud", version = "0.15.12", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9.2'" },
+    { name = "fastcrud", version = "0.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9.2'" },
     { name = "itsdangerous" },
     { name = "loguru" },
     { name = "psycopg2-binary" },
